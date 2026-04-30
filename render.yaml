@@ -20,4 +20,3 @@ databases:
   - name: chatdb
     plan: free
     databaseName: chatdb
-    user: postgres
