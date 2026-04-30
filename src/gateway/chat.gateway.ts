@@ -6,7 +6,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { createAdapter } from '@socket.io/redis-adapter';
 import Redis from 'ioredis';
 import { Server, Socket } from 'socket.io';
 import { RedisService } from '../redis/redis.service';
@@ -14,18 +13,14 @@ import { RoomsService } from '../rooms/rooms.service';
 
 @WebSocketGateway({ namespace: '/chat', cors: { origin: '*' } })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer() server: Server;
+  @WebSocketServer() server!: Server;
 
   constructor(
     private readonly redisService: RedisService,
     private readonly roomsService: RoomsService,
   ) {}
 
-  afterInit(server: Server): void {
-    const pubClient = new Redis(process.env.REDIS_URL!);
-    const adapterSubClient = pubClient.duplicate();
-    server.adapter(createAdapter(pubClient, adapterSubClient));
-
+  afterInit(): void {
     // Dedicated subscriber for REST → WS fan-out
     const subClient = new Redis(process.env.REDIS_URL!);
     subClient.psubscribe('room:*:messages', 'room:*:deleted');

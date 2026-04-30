@@ -17,12 +17,15 @@ const redis_module_1 = require("./redis/redis.module");
 const session_guard_1 = require("./common/guards/session.guard");
 const users_module_1 = require("./users/users.module");
 const auth_module_1 = require("./auth/auth.module");
+const rooms_module_1 = require("./rooms/rooms.module");
+const messages_module_1 = require("./messages/messages.module");
+const gateway_module_1 = require("./gateway/gateway.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [config_1.ConfigModule.forRoot({ isGlobal: true }), database_module_1.DatabaseModule, redis_module_1.RedisModule, users_module_1.UsersModule, auth_module_1.AuthModule],
+        imports: [config_1.ConfigModule.forRoot({ isGlobal: true }), database_module_1.DatabaseModule, redis_module_1.RedisModule, users_module_1.UsersModule, auth_module_1.AuthModule, rooms_module_1.RoomsModule, messages_module_1.MessagesModule, gateway_module_1.GatewayModule],
         controllers: [app_controller_1.AppController],
         providers: [
             app_service_1.AppService,
