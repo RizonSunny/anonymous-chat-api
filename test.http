@@ -1,0 +1,105 @@
+@token = paste_session_token_here
+@otherToken = paste_other_session_token_here
+@roomId = paste_room_id_here
+
+### Login — creates new user and returns session token
+POST http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{"username": "ali_123"}
+
+###
+
+### Login again — same user.id, fresh session token
+POST http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{"username": "ali_123"}
+
+###
+
+### Validation error — username too short (min 2)
+POST http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{"username": "a"}
+
+###
+
+### Validation error — invalid characters (space not allowed)
+POST http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{"username": "ali 123"}
+
+###
+
+### Validation error — username too long (max 24)
+POST http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{"username": "this_username_is_way_too_long_123"}
+
+###
+
+### Auth guard — missing token should return 401
+GET http://localhost:3000/api/v1/rooms
+
+###
+
+### ── ROOMS ────────────────────────────────────────────────
+
+### Create room (requires valid token)
+POST http://localhost:3000/api/v1/rooms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"name": "general"}
+
+###
+
+### Create room — duplicate name → 409 ROOM_NAME_TAKEN
+POST http://localhost:3000/api/v1/rooms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"name": "general"}
+
+###
+
+### Create room — invalid chars → 400 VALIDATION_ERROR
+POST http://localhost:3000/api/v1/rooms
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"name": "bad name!"}
+
+###
+
+### List all rooms
+GET http://localhost:3000/api/v1/rooms
+Authorization: Bearer {{token}}
+
+###
+
+### Get room by id
+GET http://localhost:3000/api/v1/rooms/{{roomId}}
+Authorization: Bearer {{token}}
+
+###
+
+### Get room — not found → 404 ROOM_NOT_FOUND
+GET http://localhost:3000/api/v1/rooms/room_000000
+Authorization: Bearer {{token}}
+
+###
+
+### Delete room (must be creator)
+DELETE http://localhost:3000/api/v1/rooms/{{roomId}}
+Authorization: Bearer {{token}}
+
+###
+
+### Delete room by non-creator → 403 FORBIDDEN
+DELETE http://localhost:3000/api/v1/rooms/{{roomId}}
+Authorization: Bearer {{otherToken}}
