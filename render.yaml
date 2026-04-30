@@ -12,7 +12,7 @@ services:
       - key: REDIS_URL
         fromService:
           name: chat-redis
-          type: keyvalue
+          type: redis
           property: connectionString
       - key: PORT
         value: 10000
@@ -25,6 +25,6 @@ databases:
     databaseName: chatdb
     user: postgres
 
-keyValueStores:
+redises:
   - name: chat-redis
     plan: free
