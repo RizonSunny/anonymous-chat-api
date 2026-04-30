@@ -10,10 +10,7 @@ services:
           name: chatdb
           property: connectionString
       - key: REDIS_URL
-        fromService:
-          name: chat-redis
-          type: redis
-          property: connectionString
+        sync: false
       - key: PORT
         value: 10000
       - key: NODE_ENV
@@ -24,7 +21,3 @@ databases:
     plan: free
     databaseName: chatdb
     user: postgres
-
-redises:
-  - name: chat-redis
-    plan: free
